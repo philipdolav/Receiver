@@ -39,18 +39,24 @@ int Decoder(char* uncoded, char* coded) {
 			filter /= 2;
 		}
 	}
-
+	
 	for (int i = 0; i < 8; i++) {// checking mistakes
-		do {
-			k1 = data[i * 31] ^data[i * 31 + 2] ^ data[i * 31 + 4] ^ data[i * 31 + 6] ^ data[i * 31 + 8] ^ data[i * 31 + 10] ^ data[i * 31 + 12] ^ data[i * 31 + 14] ^ data[i * 31 + 16] ^ data[i * 31 + 18] ^ data[i * 31 + 20] ^ data[i * 31 + 22] ^ data[i * 31 + 24] ^ data[i * 31 + 26] ^ data[i * 31 + 28] ^ data[i * 31 + 30];
+	do {
+			k1 = data[i * 31] ^ data[i * 31 + 2] ^ data[i * 31 + 4] ^ data[i * 31 + 6] ^ data[i * 31 + 8] ^ data[i * 31 + 10] ^ data[i * 31 + 12] ^ data[i * 31 + 14] ^ data[i * 31 + 16] ^ data[i * 31 + 18] ^ data[i * 31 + 20] ^ data[i * 31 + 22] ^ data[i * 31 + 24] ^ data[i * 31 + 26] ^ data[i * 31 + 28] ^ data[i * 31 + 30];
 			k2 = data[(i * 31) + 1] ^ data[i * 31 + 2] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
 			//k1 = data[i * 15] ^ data[i * 15 + 2] ^ data[i * 15 + 4] ^ data[i * 15 + 6] ^ data[i * 15 + 8] ^ data[i * 15 + 10] ^ data[i * 15 + 12] ^ data[i * 15 + 14];
 			//k2 = data[i * 15 + 1] ^ data[i * 15 + 2] ^ data[i * 15 + 5] ^ data[i * 15 + 6] ^ data[i * 15 + 9] ^ data[i * 15 + 10] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
-			k3 = data[i * 15 + 3] ^ data[i * 15 + 4] ^ data[i * 15 + 5] ^ data[i * 15 + 6] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
-			k4 = data[i * 15 + 7] ^ data[i * 15 + 8] ^ data[i * 15 + 9] ^ data[i * 15 + 10] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
-			k = k1 + 2 * k2 + 4 * k3 + 8 * k4;
-
-
+			k3= data[(i * 31) + 3] ^ data[i * 31 + 4] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
+			k4= data[(i * 31) + 7] ^ data[i * 31 + 8] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 23] ^ data[i * 31 + 24] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
+			k5= data[(i * 31) + 15] ^ data[i * 31 + 16] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22];
+			//k3 = data[i * 15 + 3] ^ data[i * 15 + 4] ^ data[i * 15 + 5] ^ data[i * 15 + 6] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
+			//k4 = data[i * 15 + 7] ^ data[i * 15 + 8] ^ data[i * 15 + 9] ^ data[i * 15 + 10] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
+			k = k1 + 2 * k2 + 4 * k3 + 8 * k4 +16*k5 ;
+			/*data[(i * 31) + 3] = data[i * 31 + 4] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
+		data[(i * 31) + 7] = data[i * 31 + 8] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14]^ data[i * 31 + 23] ^ data[i * 31 + 24] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
+		data[(i * 31) + 15] = data[i * 31 + 16] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22];
+	}*/
+			
 			if (k != 0)
 			{
 				data[i * 31 + k - 1] = data[i * 31 + k - 1] ^ 1;
@@ -58,13 +64,14 @@ int Decoder(char* uncoded, char* coded) {
 			}
 
 		} while (k != 0);
+		
 	}
 
 	filter = 0;
 	for (int i = 0; i < 8; i++) {//extracting only data_bits
 		for (int j = 0; j < 31; j++) {
 			if (j > 1 && j != 3 && j != 7 && j != 15) {
-				decoded_data[filter] = data[i * 15 + j];
+				decoded_data[filter] = data[i * 31 + j];
 				filter++;
 			}
 		}
@@ -181,8 +188,8 @@ int main(int argc, char* argv[])
 				}
 
 			} while (buff_length > 0);
-
-			err_num += decode(buffer, buff_length, f);
+			err_num += decode(buffer,sizeof(buffer), f);
+			//err_num += decode(buffer, buff_length, f);
 			sprintf(output, "received: %d bytes\nwrote: %d bytes\ndetected and corrected %d errors\n", received, received * 2600 / 3100, err_num);
 			fclose(f);
 		}
