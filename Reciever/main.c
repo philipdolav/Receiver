@@ -44,18 +44,10 @@ int Decoder(char* uncoded, char* coded) {
 	do {
 			k1 = data[i * 31] ^ data[i * 31 + 2] ^ data[i * 31 + 4] ^ data[i * 31 + 6] ^ data[i * 31 + 8] ^ data[i * 31 + 10] ^ data[i * 31 + 12] ^ data[i * 31 + 14] ^ data[i * 31 + 16] ^ data[i * 31 + 18] ^ data[i * 31 + 20] ^ data[i * 31 + 22] ^ data[i * 31 + 24] ^ data[i * 31 + 26] ^ data[i * 31 + 28] ^ data[i * 31 + 30];
 			k2 = data[(i * 31) + 1] ^ data[i * 31 + 2] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
-			//k1 = data[i * 15] ^ data[i * 15 + 2] ^ data[i * 15 + 4] ^ data[i * 15 + 6] ^ data[i * 15 + 8] ^ data[i * 15 + 10] ^ data[i * 15 + 12] ^ data[i * 15 + 14];
-			//k2 = data[i * 15 + 1] ^ data[i * 15 + 2] ^ data[i * 15 + 5] ^ data[i * 15 + 6] ^ data[i * 15 + 9] ^ data[i * 15 + 10] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
 			k3= data[(i * 31) + 3] ^ data[i * 31 + 4] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
 			k4= data[(i * 31) + 7] ^ data[i * 31 + 8] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 23] ^ data[i * 31 + 24] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
-			k5= data[(i * 31) + 15] ^ data[i * 31 + 16] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22];
-			//k3 = data[i * 15 + 3] ^ data[i * 15 + 4] ^ data[i * 15 + 5] ^ data[i * 15 + 6] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
-			//k4 = data[i * 15 + 7] ^ data[i * 15 + 8] ^ data[i * 15 + 9] ^ data[i * 15 + 10] ^ data[i * 15 + 11] ^ data[i * 15 + 12] ^ data[i * 15 + 13] ^ data[i * 15 + 14];
-			k = k1 + 2 * k2 + 4 * k3 + 8 * k4 +16*k5 ;
-			/*data[(i * 31) + 3] = data[i * 31 + 4] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
-		data[(i * 31) + 7] = data[i * 31 + 8] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 11] ^ data[i * 31 + 12] ^ data[i * 31 + 13] ^ data[i * 31 + 14]^ data[i * 31 + 23] ^ data[i * 31 + 24] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
-		data[(i * 31) + 15] = data[i * 31 + 16] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22];
-	}*/
+			k5= data[(i * 31) + 15] ^ data[i * 31 + 16] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 19] ^ data[i * 31 + 20] ^ data[i * 31 + 21] ^ data[i * 31 + 22]^ data[(i * 31) + 23] ^ data[i * 31 + 24] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 27] ^ data[i * 31 + 28] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
+			k = k1 + 2 * k2 + 4 * k3 + 8 * k4 + 16 * k5 ;
 			
 			if (k != 0)
 			{
@@ -109,7 +101,7 @@ int decode(char* buffer, int blen, FILE* f)
 	return errcount;
 }
 
-int cleanupAll(char* recieved, int connected) {
+int cleanupAll() {
 	int to_return = 0;
 	int result = WSACleanup();
 	if (result != 0) {
@@ -130,19 +122,16 @@ int main(int argc, char* argv[])
 	int  retval, buffer_len, err_num = 0, received = 0;
 	unsigned char dec_buff[2600] = { 0 }, buffer[BUFFER_SIZE] = { 0 };
 	char str[4] = { 0 }, output[200];
-
-
+	WSADATA wsa_data; 	// Initialize Winsock
+	int result;
+	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+	if (result != 0) {
+		printf("WSAStartup failed: %d\n", result);
+		return 1;
+	}
 	// Infinite iteration for socket opening until recieving quit:
 	while (1) {
-
 		//socket creation and conecction:
-		WSADATA wsa_data; 	// Initialize Winsock
-		int result;
-		result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-		if (result != 0) {
-			printf("WSAStartup failed: %d\n", result);
-			return 1;
-		}
 		if ((reciever_s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET) // Create and init socket in TCP protocol
 		{
 			printf("Could not create socket : %d", WSAGetLastError());
@@ -154,9 +143,7 @@ int main(int argc, char* argv[])
 		client_addr.sin_addr.s_addr = inet_addr(IP);		// IP address
 		int client_addr_len = sizeof(client_addr);
 
-
-
-		while (1) {
+		//while (1) {
 			//Try to connect to Server
 			if (connect(reciever_s, (SOCKADDR*)&client_addr, sizeof(client_addr)) == SOCKET_ERROR) {
 				printf("Failed to connect to server on %s:%s  %d", argv[1], argv[2], WSAGetLastError());
@@ -168,7 +155,7 @@ int main(int argc, char* argv[])
 			// store in "f_name"
 			scanf("%s", f_name);
 			if (!strcmp(f_name, "quit"))
-				return cleanupAll(f_name, 0);
+				return cleanupAll();
 			FILE* f = NULL;
 			f = fopen(f_name, "wb"); //Create an empty binary file for writing. If the file exists, its contents are cleared unless it is a logical file.
 			if (f == NULL)
@@ -180,18 +167,23 @@ int main(int argc, char* argv[])
 			do {
 				buff_length = recv(reciever_s, buffer, BUFFER_SIZE + 2, 0);
 				received += buff_length;
-				if (buff_length > 0)
-					printf("Bytes received: %d\n the strins is %s\n", buff_length, buffer);
-				else if (buff_length < 0) {
+				//if (buff_length > 0)
+				//	printf("\nBytes received: %d bytes\n the string is %s\n", buff_length, buffer);
+				if (buff_length < 0) {
 					printf("recv failed: %d\n", WSAGetLastError());
-					//cleanup
+					return cleanupAll();
+					
 				}
 
 			} while (buff_length > 0);
-			err_num += decode(buffer,sizeof(buffer), f);
+			err_num += decode(buffer,strlen(buffer), f);
 			//err_num += decode(buffer, buff_length, f);
-			sprintf(output, "received: %d bytes\nwrote: %d bytes\ndetected and corrected %d errors\n", received, received * 2600 / 3100, err_num);
+			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * 2600 / 3100, err_num);
 			fclose(f);
-		}
+			printf("enter a file name or quit if done:\n");
+			scanf("%s", f_name);
+			if (!strcmp(f_name, "quit"))
+				return cleanupAll();
+		//}
 	}
 }
