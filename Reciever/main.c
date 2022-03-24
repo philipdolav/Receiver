@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	unsigned char dec_buff[2600] = { 0 }, buffer[BUFFER_SIZE] = { 0 };
 	char str[4] = { 0 }, output[200];
 	WSADATA wsa_data; 	// Initialize Winsock
-	int result;
+	int result,degel=1;
 	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
 	if (result != 0) {
 		printf("WSAStartup failed: %d\n", result);
@@ -149,13 +149,17 @@ int main(int argc, char* argv[])
 				printf("Failed to connect to server on %s:%s  %d", argv[1], argv[2], WSAGetLastError());
 				//	return 1;
 			}
-			printf("enter a file name or quit if done:\n");
 			char f_name[100];
-			// Read a char type variable,
-			// store in "f_name"
-			scanf("%s", f_name);
-			if (!strcmp(f_name, "quit"))
-				return cleanupAll();
+			if (degel) {
+				printf("enter a file name or quit if done:\n");
+				
+				// Read a char type variable,
+				// store in "f_name"
+				scanf("%s", f_name);
+
+				if (!strcmp(f_name, "quit"))
+					return cleanupAll();
+			}
 			FILE* f = NULL;
 			f = fopen(f_name, "wb"); //Create an empty binary file for writing. If the file exists, its contents are cleared unless it is a logical file.
 			if (f == NULL)
@@ -180,10 +184,13 @@ int main(int argc, char* argv[])
 			//err_num += decode(buffer, buff_length, f);
 			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * 2600 / 3100, err_num);
 			fclose(f);
+			received = 0;
+			err_num = 0;
+			degel = 0;
 			printf("enter a file name or quit if done:\n");
 			scanf("%s", f_name);
 			if (!strcmp(f_name, "quit"))
 				return cleanupAll();
-		//}
+		
 	}
 }
