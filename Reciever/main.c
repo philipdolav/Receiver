@@ -20,11 +20,16 @@
 #include <stdbool.h>
 SOCKET reciever_s;
 
-int Decoder(char* uncoded, char* coded) {
+int hamming_decode(char* res_str, char* coded) {
+	/*
+		Receives coded 31 bits char and an empty char res_str.
+		fills res_str with the 26 bits correction of the 31 bits string accordint to hamming correction code 
+	*/
 	int filter = 128, i, j, k, k1, k2, k3, k4, k5, err_count = 0, CodedInt = 0;
 	char data[8*31], decoded_data[26*8];
 
-	for (int i = 0; i < 31; i++) {//extracting 15bits per tour (bit number i of each byte)
+	//extracting 26 bits per tour (bit number i of each byte)
+	for (int i = 0; i < 31; i++) {
 		if (coded[i] < 0)
 		{
 			CodedInt = (int)coded[i] + 256;
@@ -40,7 +45,8 @@ int Decoder(char* uncoded, char* coded) {
 		}
 	}
 	
-	for (int i = 0; i < 8; i++) {// checking mistakes
+	// detecting errors
+	for (int i = 0; i < 8; i++) {
 	do {
 			k1 = data[i * 31] ^ data[i * 31 + 2] ^ data[i * 31 + 4] ^ data[i * 31 + 6] ^ data[i * 31 + 8] ^ data[i * 31 + 10] ^ data[i * 31 + 12] ^ data[i * 31 + 14] ^ data[i * 31 + 16] ^ data[i * 31 + 18] ^ data[i * 31 + 20] ^ data[i * 31 + 22] ^ data[i * 31 + 24] ^ data[i * 31 + 26] ^ data[i * 31 + 28] ^ data[i * 31 + 30];
 			k2 = data[(i * 31) + 1] ^ data[i * 31 + 2] ^ data[i * 31 + 5] ^ data[i * 31 + 6] ^ data[i * 31 + 9] ^ data[i * 31 + 10] ^ data[i * 31 + 13] ^ data[i * 31 + 14] ^ data[i * 31 + 17] ^ data[i * 31 + 18] ^ data[i * 31 + 21] ^ data[i * 31 + 22] ^ data[i * 31 + 25] ^ data[i * 31 + 26] ^ data[i * 31 + 29] ^ data[i * 31 + 30];
@@ -59,8 +65,9 @@ int Decoder(char* uncoded, char* coded) {
 		
 	}
 
+	//extracting only data_bits
 	filter = 0;
-	for (int i = 0; i < 8; i++) {//extracting only data_bits
+	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 31; j++) {
 			if (j > 1 && j != 3 && j != 7 && j != 15) {
 				decoded_data[filter] = data[i * 31 + j];
@@ -69,13 +76,14 @@ int Decoder(char* uncoded, char* coded) {
 		}
 	}
 
-	for (int i = 0; i < 26; i++) uncoded[i] = 0;
+	for (int i = 0; i < 26; i++) res_str[i] = 0;
 
 	filter = 128;
 
-	for (int i = 0; i < 26; i++) {// writting dataout
+	// writting decoded data
+	for (int i = 0; i < 26; i++) {
 		for (int j = 0; j < 8; j++) {
-			uncoded[i] |= decoded_data[i * 8 + j] * filter;
+			res_str[i] |= decoded_data[i * 8 + j] * filter;
 			filter /= 2;
 		}
 		filter = 128;
@@ -85,15 +93,15 @@ int Decoder(char* uncoded, char* coded) {
 int decode(char* buffer, int blen, FILE* f)
 {
 	/*
-		Receives encoded (char*) buffer and a (FILE*) f, and writes to the file the decoded data from the buffer
+		Receives encoded (char*) buffer and a (FILE*) f.
+		calls decoder function and writes to the file the decoded data from the buffer.
 	*/
 
 	int errcount = 0;
 	char decoded[27] = { 0 };
-	int a = strlen(buffer);
+
 	while (blen > 0) {
-		errcount += Decoder(decoded, buffer);
-		//strncat(dec_buffer, decoded, 12);
+		errcount += hamming_decode(decoded, buffer);
 		fwrite(decoded, 26, 1, f);
 		blen -= 31;
 		buffer += 31;
@@ -143,8 +151,6 @@ int main(int argc, char* argv[])
 		client_addr.sin_addr.s_addr = inet_addr(IP);		// IP address
 		int client_addr_len = sizeof(client_addr);
 
-		//while (1) {
-			//Try to connect to Server
 			if (connect(reciever_s, (SOCKADDR*)&client_addr, sizeof(client_addr)) == SOCKET_ERROR) {
 				printf("Failed to connect to server on %s:%s  %d", argv[1], argv[2], WSAGetLastError());
 				//	return 1;
@@ -161,7 +167,7 @@ int main(int argc, char* argv[])
 					return cleanupAll();
 			}
 			FILE* f = NULL;
-			f = fopen(f_name, "wb"); //Create an empty binary file for writing. If the file exists, its contents are cleared unless it is a logical file.
+			f = fopen(f_name, "wb"); //open file in write bits mode, if exists it will overwrite.
 			if (f == NULL)
 			{
 				printf("File error. Coudn't open file\n");// CHECKING IF OPENED SUCCSESSFULLY
@@ -171,18 +177,17 @@ int main(int argc, char* argv[])
 			do {
 				buff_length = recv(reciever_s, buffer, BUFFER_SIZE + 2, 0);
 				received += buff_length;
-				//if (buff_length > 0)
-				//	printf("\nBytes received: %d bytes\n the string is %s\n", buff_length, buffer);
+				
 				if (buff_length < 0) {
 					printf("recv failed: %d\n", WSAGetLastError());
 					return cleanupAll();
-					
+										
 				}
 
 			} while (buff_length > 0);
-			err_num += decode(buffer,strlen(buffer), f);
-			//err_num += decode(buffer, buff_length, f);
+			err_num += decode(buffer, received, f);
 			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * 2600 / 3100, err_num);
+			
 			fclose(f);
 			received = 0;
 			err_num = 0;
