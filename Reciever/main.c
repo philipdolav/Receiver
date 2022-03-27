@@ -3,7 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRTDBG_MAP_ALLOC
-#define BUFFER_SIZE 3101
+#define BUFFER_SIZE 1489
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -30,6 +30,7 @@ int hamming_decode(char* res_str, char* coded) {
 
 	//extracting 26 bits per tour (bit number i of each byte)
 	for (int i = 0; i < 31; i++) {
+	
 		if (coded[i] < 0)
 		{
 			CodedInt = (int)coded[i] + 256;
@@ -100,7 +101,7 @@ int decode(char* buffer, int blen, FILE* f)
 	int errcount = 0;
 	char decoded[27] = { 0 };
 
-	while (blen > 0) {
+	while (blen > 0 && *buffer != '\0' ) {
 		errcount += hamming_decode(decoded, buffer);
 		fwrite(decoded, 26, 1, f);
 		blen -= 31;
@@ -186,7 +187,7 @@ int main(int argc, char* argv[])
 
 			} while (buff_length > 0);
 			err_num += decode(buffer, received, f);
-			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * 2600 / 3100, err_num);
+			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * (26 / 31), err_num);
 			
 			fclose(f);
 			received = 0;
