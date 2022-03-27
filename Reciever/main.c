@@ -3,7 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRTDBG_MAP_ALLOC
-#define BUFFER_SIZE 1489
+#define BUFFER_SIZE 1488 //closest multiplication of 31 to 1500
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -90,6 +90,7 @@ int hamming_decode(char* res_str, char* coded) {
 		filter = 128;
 	}
 	return err_count;
+
 }
 int decode(char* buffer, int blen, FILE* f)
 {
@@ -101,7 +102,7 @@ int decode(char* buffer, int blen, FILE* f)
 	int errcount = 0;
 	char decoded[27] = { 0 };
 
-	while (blen > 0 && *buffer != '\0' ) {
+	while (blen > 0 ) {
 		errcount += hamming_decode(decoded, buffer);
 		fwrite(decoded, 26, 1, f);
 		blen -= 31;
@@ -129,7 +130,7 @@ int main(int argc, char* argv[])
 	strcpy(port, argv[2]);
 	int buff_length, flipped_bits = 0;
 	int  retval, buffer_len, err_num = 0, received = 0;
-	unsigned char dec_buff[2600] = { 0 }, buffer[BUFFER_SIZE] = { 0 };
+	unsigned char dec_buff[2600] = { 0 }, buffer[BUFFER_SIZE + 1] = { 0 };
 	char str[4] = { 0 }, output[200];
 	WSADATA wsa_data; 	// Initialize Winsock
 	int result,degel=1;
@@ -176,18 +177,23 @@ int main(int argc, char* argv[])
 			}
 
 			do {
-				buff_length = recv(reciever_s, buffer, BUFFER_SIZE + 2, 0);
+				buff_length = recv(reciever_s, buffer, BUFFER_SIZE , 0);
 				received += buff_length;
+				for (int i = buff_length; i < BUFFER_SIZE; i++)
+				{
+					buffer[i] = '\0';
+				}
 				
 				if (buff_length < 0) {
 					printf("recv failed: %d\n", WSAGetLastError());
 					return cleanupAll();
 										
 				}
+				err_num += decode(buffer, buff_length, f);
 
 			} while (buff_length > 0);
-			err_num += decode(buffer, received, f);
-			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received * (26 / 31), err_num);
+			int a = received * 26 / 31;
+			printf("\nreceived: %d bytes\nwrote: %d bytes\ncorrected %d errors\n", received, received*26/31, err_num);
 			
 			fclose(f);
 			received = 0;
